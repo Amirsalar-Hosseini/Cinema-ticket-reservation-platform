@@ -6,9 +6,6 @@ class UserManager(BaseUserManager):
     Define user and superuser
     """
     def create_user(self, first_name, last_name, phone_number, password=None, **extra_fields):
-        if not password:
-            raise ValueError('User must have a password')
-
         if not phone_number:
             raise ValueError('User must have a phone_number')
 
@@ -28,5 +25,6 @@ class UserManager(BaseUserManager):
         user.is_superuser = True
         user.is_staff = True
         user.is_admin = True
+        user.is_active = True
         user.save(using=self._db)
         return user
