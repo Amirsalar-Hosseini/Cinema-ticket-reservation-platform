@@ -10,7 +10,7 @@ class MovieView(APIView):
 
     def get(self, request):
         movies = self.queryset.all()
-        ser_data = MovieSerializer(movies, many=True)
+        ser_data = self.serializer_class(movies, many=True)
         return Response(ser_data.data)
 
 
@@ -20,15 +20,15 @@ class ReviewView(APIView):
 
     def get(self, request):
         reviews = self.queryset.all()
-        ser_data = ReviewSerializer(reviews, many=True)
+        ser_data = self.serializer_class(reviews, many=True)
         return Response(ser_data.data)
 
 
 class GenreView(APIView):
     queryset = Genre.objects.all()
-    serializer_class = MovieSerializer
+    serializer_class = GenreSerializer
 
     def get(self, request):
         genres = self.queryset.all()
-        ser_data = GenreSerializer(genres, many=True)
+        ser_data = self.serializer_class(genres, many=True)
         return Response(ser_data.data)
