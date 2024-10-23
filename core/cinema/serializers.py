@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Cinema, Screen, Location
+from .models import *
 
 
 class CinemaSerializer(serializers.ModelSerializer):
