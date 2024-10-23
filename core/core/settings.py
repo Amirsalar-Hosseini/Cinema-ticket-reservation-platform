@@ -43,6 +43,9 @@ INSTALLED_APPS = [
     # Apps
     'home.apps.HomeConfig',
     'accounts.apps.AccountsConfig',
+    'cinema.apps.CinemaConfig',
+    'movie.apps.MovieConfig',
+    'ticket.apps.TicketConfig',
 ]
 
 MIDDLEWARE = [
