@@ -1,4 +1,4 @@
-# 🎬 Cinema Ticket Booking System 🍿
+# 🎬 Cinema Ticket Reservation Platform 🍿
 
 A **web-based cinema ticket booking system** built with Django REST Framework, allowing users to easily browse movies, select showtimes, and reserve tickets for their preferred seats. The system features **JWT-based authentication** with a custom user model for enhanced user management.
 
@@ -45,8 +45,8 @@ Follow these steps to set up the project locally:
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/yourusername/cinema-ticket-booking.git
-   cd cinema-ticket-booking
+   git clone https://github.com/yourusername/cinema-ticket-reservation-platform.git
+   cd cinema-ticket-platform
    ```
    2. Install dependencies:
    ```bash
