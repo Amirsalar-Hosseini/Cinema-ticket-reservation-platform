@@ -14,19 +14,7 @@ class TicketSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-# class ReservationSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Reservation
-#         fields = '__all__'
-
-
 class PaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Payment
         fields = '__all__'
-
-
-# class PriceCategorySerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = PriceCategory
-#         fields = '__all__'

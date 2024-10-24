@@ -10,7 +10,6 @@ class Showtime(models.Model):
     """
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
     screen = models.ForeignKey(Screen, on_delete=models.CASCADE)
-    # price_category = models.ForeignKey('PriceCategory', on_delete=models.CASCADE)
     show_time = models.DateTimeField()
     ticket_price = models.DecimalField(max_digits=6, decimal_places=2)
 
@@ -31,21 +30,6 @@ class Ticket(models.Model):
 
     def __str__(self):
         return f'Ticket for {self.showtime.movie.title} at {self.showtime.show_time} for seat {self.seat_number}'
-
-
-# class Reservation(models.Model):
-#     """
-#     reserve info for Admin
-#     """
-#     user = models.ForeignKey(User, on_delete=models.CASCADE)
-#     showtime = models.ForeignKey(Showtime, on_delete=models.CASCADE)
-#     num_of_tickets = models.IntegerField()
-#     total_price = models.DecimalField(max_digits=6, decimal_places=2)
-#     reserved_at = models.DateTimeField(auto_now_add=True)
-#     is_confirmed = models.BooleanField(default=False)
-#
-#     def __str__(self):
-#         return f'Reservation by {self.user.first_name} {self.user.last_name} for {self.num_of_tickets} tickets'
 
 
 class Payment(models.Model):
@@ -71,14 +55,3 @@ class Payment(models.Model):
 
     def __str__(self):
         return f'Payment of {self.amount} by {self.user.first_name} {self.user.last_name} for {self.ticket.id}'
-
-# class PriceCategory(models.Model):
-#     """
-#     define category for price
-#     """
-#     price_range = models.CharField(max_length=50)
-#     min_price = models.DecimalField(max_digits=6, decimal_places=2)
-#     max_price = models.DecimalField(max_digits=6, decimal_places=2)
-#
-#     def __str__(self):
-#         return f'{self.price_range} {self.min_price} - {self.max_price}'

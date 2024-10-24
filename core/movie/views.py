@@ -22,13 +22,3 @@ class ReviewView(APIView):
         reviews = self.queryset.all()
         ser_data = self.serializer_class(reviews, many=True)
         return Response(ser_data.data)
-
-
-class GenreView(APIView):
-    queryset = Genre.objects.all()
-    serializer_class = GenreSerializer
-
-    def get(self, request):
-        genres = self.queryset.all()
-        ser_data = self.serializer_class(genres, many=True)
-        return Response(ser_data.data)
