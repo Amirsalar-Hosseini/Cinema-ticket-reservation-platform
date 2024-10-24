@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Showtime, Ticket, Payment, Reservation, PriceCategory
+from .models import Showtime, Ticket, Payment
 
 
 class ShowtimeSerializer(serializers.ModelSerializer):
@@ -14,10 +14,10 @@ class TicketSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class ReservationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Reservation
-        fields = '__all__'
+# class ReservationSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Reservation
+#         fields = '__all__'
 
 
 class PaymentSerializer(serializers.ModelSerializer):
@@ -26,7 +26,7 @@ class PaymentSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class PriceCategorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PriceCategory
-        fields = '__all__'
+# class PriceCategorySerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = PriceCategory
+#         fields = '__all__'
