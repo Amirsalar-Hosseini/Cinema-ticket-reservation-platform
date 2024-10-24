@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import Movie, Genre, Review
-from .serializers import MovieSerializer, ReviewSerializer, GenreSerializer
+from .models import Movie, Review
+from .serializers import MovieSerializer, ReviewSerializer
 
 
 class MovieView(APIView):
@@ -11,6 +11,15 @@ class MovieView(APIView):
     def get(self, request):
         movies = self.queryset.all()
         ser_data = self.serializer_class(movies, many=True)
+        return Response(ser_data.data)
+
+class MovieDetailView(APIView):
+    queryset = Movie.objects.all()
+    serializer_class = MovieSerializer
+
+    def get(self, request, pk):
+        movie = self.queryset.get(pk=pk)
+        ser_data = self.serializer_class(movie)
         return Response(ser_data.data)
 
 
