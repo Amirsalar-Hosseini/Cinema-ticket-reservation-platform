@@ -23,6 +23,16 @@ class ShowtimeView(APIView):
             return Response({'message': 'no showtime available'}, status=status.HTTP_404_NOT_FOUND)
 
 
+class ShowTimeDetailView(APIView):
+    queryset = Showtime.objects.all()
+    serializer_class = ShowtimeSerializer
+
+    def get(self, request, pk):
+        showtime = self.queryset.get(pk=pk)
+        ser_data = self.serializer_class(showtime)
+        return Response(ser_data.data)
+
+
 class TicketView(APIView):
     queryset = Ticket.objects.all()
     serializer_class = TicketSerializer
