@@ -1,3 +1,4 @@
+from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import Showtime, Ticket, Payment
@@ -9,9 +10,17 @@ class ShowtimeView(APIView):
     serializer_class = ShowtimeSerializer
 
     def get(self, request):
-        showtimes = self.queryset.all()
-        ser_data = self.serializer_class(showtimes, many=True)
-        return Response(ser_data.data)
+        city = request.query_params.get('city', None)
+        province = request.query_params.get('province', None)
+        if not city or not province:
+            return Response(data={'error': 'Both city and province are required'}, status=status.HTTP_400_BAD_REQUEST)
+
+        showtimes = self.queryset.filter(screen__cinema__location__province=province, screen__cinema__location__city=city)
+        if showtimes.exists():
+            ser_data = self.serializer_class(showtimes, many=True)
+            return Response(ser_data.data)
+        else:
+            return Response({'message': 'no showtime available'}, status=status.HTTP_404_NOT_FOUND)
 
 
 class TicketView(APIView):
@@ -24,16 +33,6 @@ class TicketView(APIView):
         return Response(ser_data.data)
 
 
-# class ReservationView(APIView):
-#     queryset = Reservation.objects.all()
-#     serializer_class = ReservationSerializer
-#
-#     def get(self, request):
-#         reservations = self.queryset.all()
-#         ser_data = self.serializer_class(reservations, many=True)
-#         return Response(ser_data.data)
-
-
 class PaymentView(APIView):
     queryset = Payment.objects.all()
     serializer_class = PaymentSerializer
@@ -42,13 +41,3 @@ class PaymentView(APIView):
         payments = self.queryset.all()
         ser_data = self.serializer_class(payments, many=True)
         return Response(ser_data.data)
-
-
-# class PriceCategoryView(APIView):
-#     queryset = PriceCategory.objects.all()
-#     serializer_class = PriceCategorySerializer
-#
-#     def get(self, request):
-#         price_categories = self.queryset.all()
-#         ser_data = self.serializer_class(price_categories, many=True)
-#         return Response(ser_data.data)
