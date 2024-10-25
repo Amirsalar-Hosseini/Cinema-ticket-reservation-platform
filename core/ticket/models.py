@@ -46,19 +46,9 @@ class Payment(models.Model):
     payment info
     """
 
-
-    PAYMENT_METHOD_CHOICES = [
-        ('credit_card', 'Credit Card'),
-        ('paypal', 'PayPal'),
-        ('cash', 'Cash'),
-        ('wallet', 'Wallet'),
-        ('cryptocurrency', 'Cryptocurrency'),
-    ]
-
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     ticket = models.ForeignKey(Ticket, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=6, decimal_places=2)
-    payment_method = models.CharField(max_length=50, choices=PAYMENT_METHOD_CHOICES)
     payment_status = models.CharField(max_length=50, choices=[('Success', 'Success'), ('Failed', 'Failed')])
     payment_date = models.DateTimeField(auto_now_add=True)
 
