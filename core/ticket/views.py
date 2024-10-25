@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import Showtime, Ticket, Payment
 from .serializers import ShowtimeSerializer, TicketSerializer, PaymentSerializer
+from accounts.models import User
 
 
 class ShowtimeView(APIView):
@@ -37,10 +38,31 @@ class TicketView(APIView):
     queryset = Ticket.objects.all()
     serializer_class = TicketSerializer
 
-    def get(self, request):
-        tickets = self.queryset.all()
-        ser_data = self.serializer_class(tickets, many=True)
-        return Response(ser_data.data)
+    def get(self, request, showtime_id, *args, **kwargs):
+        showtime = Showtime.objects.get(id=showtime_id)
+        booked_seat_number = [ticket.seat_number for ticket in self.queryset.filter(showtime__id=showtime.id)]
+        seat_numbers = [str(i) for i in range(1, showtime.screen.capacity + 1)]
+        available_seats = sorted(list(set(seat_numbers) - set(booked_seat_number)))
+
+        response_data = {
+            'showtime_id': showtime.id,
+            'seat_numbers': seat_numbers,
+            'available_seat': available_seats,
+        }
+        return Response(response_data, status=status.HTTP_200_OK)
+
+    def post(self, request, showtime_id, *args, **kwargs):
+        showtime = Showtime.objects.get(id=showtime_id)
+        user = User.objects.get(id=request.user.id)
+        seat_number = request.data.get('seat_number')
+        num_of_tickets = int(request.data.get('num_of_tickets'))
+        if self.queryset.filter(showtime=showtime, seat_number=seat_number).exists():
+            return Response({'error': 'this seat is already booked'}, status=status.HTTP_400_BAD_REQUEST)
+
+        ticket = self.queryset.create(user=user, showtime=showtime, seat_number=seat_number, num_of_tickets=num_of_tickets)
+        ticket.save()
+        return Response({'success': 'ticket created successfully', "total_price": ticket.total_price}, status=status.HTTP_201_CREATED)
+
 
 
 class PaymentView(APIView):

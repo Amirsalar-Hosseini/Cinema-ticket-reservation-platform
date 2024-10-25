@@ -1,3 +1,4 @@
+from decimal import Decimal
 from django.db import models
 from accounts.models import User
 from cinema.models import Screen
@@ -30,6 +31,14 @@ class Ticket(models.Model):
 
     def __str__(self):
         return f'Ticket for {self.showtime.movie.title} at {self.showtime.show_time} for seat {self.seat_number}'
+
+    def save(self, *args, **kwargs):
+        ticket_price = self.showtime.ticket_price
+        self.total_price = Decimal(ticket_price * self.num_of_tickets)
+        super().save(*args, **kwargs)
+
+    class Meta:
+        unique_together = ('showtime', 'seat_number')
 
 
 class Payment(models.Model):
