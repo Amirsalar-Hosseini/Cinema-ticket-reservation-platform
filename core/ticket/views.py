@@ -69,7 +69,16 @@ class PaymentView(APIView):
     queryset = Payment.objects.all()
     serializer_class = PaymentSerializer
 
-    def get(self, request):
-        payments = self.queryset.all()
-        ser_data = self.serializer_class(payments, many=True)
-        return Response(ser_data.data)
+    def post(self, request, ticket_id, *args, **kwargs):
+        user = User.objects.get(id=request.user.id)
+        ticket = Ticket.objects.get(id=ticket_id)
+        amount = ticket.total_price
+        payment_status = request.data.get('payment_status')
+        if payment_status:
+            payment_status = 'Success'
+        else:
+            payment_status = 'Failed'
+
+        Payment.objects.create(user=user, ticket=ticket, amount=amount, payment_status=payment_status)
+
+        return Response({'message': 'created successfully'})
