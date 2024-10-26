@@ -13,6 +13,7 @@ class Movie(models.Model):
     director = models.CharField(max_length=100)
     language = models.CharField(max_length=50)
     age_rating = models.CharField(max_length=10)
+    poster = models.ImageField(upload_to=f'movie_posters/', blank=True, null=True)
 
     def __str__(self):
         return self.title

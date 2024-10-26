@@ -6,7 +6,7 @@ from .models import Movie, Review, Genre
 
 @admin.register(Movie)
 class MovieAdmin(admin.ModelAdmin):
-    list_display = ['id', 'title', 'release_date', 'director', 'language', 'age_rating']
+    list_display = ['id', 'title', 'release_date', 'director', 'language', 'age_rating', 'poster']
 
 
 @admin.register(Review)
