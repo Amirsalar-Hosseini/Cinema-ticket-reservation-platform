@@ -19,7 +19,7 @@ class Screen(models.Model):
     """
     screen model for each Cinema
     """
-    cinema = models.ForeignKey(Cinema, on_delete=models.CASCADE)
+    cinema = models.ForeignKey(Cinema, on_delete=models.CASCADE, related_name='screens')
     screen_number = models.IntegerField()
     capacity = models.IntegerField()
 
