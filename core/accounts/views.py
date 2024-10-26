@@ -2,8 +2,10 @@ from rest_framework import status, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
-from .models import User
+from .models import User, VerificationCode
 from .serializers import UserSerializer
+from rest_framework import status
+from django.utils import timezone
 
 
 class UserRegisterView(APIView):
@@ -16,6 +18,45 @@ class UserRegisterView(APIView):
             ser_data.create(ser_data.validated_data)
             return Response(ser_data.data, status=status.HTTP_201_CREATED)
         return Response(ser_data.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class SendVerificationCodeView(APIView):
+
+    def post(self, request):
+        user = User.objects.get(id=request.user.id)
+        last_code = VerificationCode.objects.filter(user=user).order_by('-created').first()
+
+        if last_code and last_code.created > timezone.now() - timezone.timedelta(minutes=1):
+            return Response({'error': 'You can only request a code once per minute.'}, status=status.HTTP_429_TOO_MANY_REQUESTS)
+
+        code = VerificationCode.generate_code()
+        verification = VerificationCode.objects.create(user=user, code=code)
+
+        print(f'Verification code for {user.phone_number}: {code}')
+        return Response({'message': 'Verification code sent.'}, status=status.HTTP_200_OK)
+
+
+
+class VerifyCodeView(APIView):
+
+    def post(self, request):
+        user = User.objects.get(id=request.user.id)
+        code = request.data.get('code')
+
+        last_code = VerificationCode.objects.filter(user=user, is_used=False).order_by('-created').first()
+
+        if not last_code:
+            return Response({'error': 'No verification code found.'}, status=status.HTTP_404_NOT_FOUND)
+
+        if not last_code.is_valid():
+            return Response({'error': 'The verification code has expired.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if last_code.code == code:
+            last_code.is_used = True
+            last_code.save()
+            return Response({'message': 'Phone number verified and registration complete.'}, status=status.HTTP_200_OK)
+        else:
+            return Response({'error': 'Invalid verification code.'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserUpdateView(APIView):

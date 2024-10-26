@@ -1,6 +1,8 @@
+import random
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
 from django.core.validators import MinLengthValidator
+from django.utils import timezone
 from .managers import UserManager
 
 
@@ -32,3 +34,20 @@ class User(AbstractBaseUser):
 
     def has_module_perms(self, app_label):
         return True
+
+class VerificationCode(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    code = models.CharField(max_length=4)
+    created = models.DateTimeField(auto_now_add=True)
+    is_used = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f'{self.code}'
+
+    def is_valid(self):
+        expiration_time = self.created + timezone.timedelta(minutes=2)
+        return timezone.now() <= expiration_time and not self.is_used
+
+    @staticmethod
+    def generate_code():
+        return '{:04d}'.format(random.randint(0, 9999))
