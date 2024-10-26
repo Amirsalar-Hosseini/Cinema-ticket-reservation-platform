@@ -74,9 +74,9 @@ class PaymentView(APIView):
         ticket = Ticket.objects.get(id=ticket_id)
         amount = ticket.total_price
         payment_status = request.data.get('payment_status')
-        if payment_status:
+        if payment_status == 'True':
             payment_status = 'Success'
-        else:
+        elif payment_status == 'False':
             payment_status = 'Failed'
 
         Payment.objects.create(user=user, ticket=ticket, amount=amount, payment_status=payment_status)
