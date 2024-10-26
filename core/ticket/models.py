@@ -25,17 +25,10 @@ class Ticket(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     showtime = models.ForeignKey(Showtime, on_delete=models.CASCADE)
     seat_number = models.CharField(max_length=10)
-    num_of_tickets = models.IntegerField()
     is_paid = models.BooleanField(default=False)
-    total_price = models.DecimalField(max_digits=6, decimal_places=2)
 
     def __str__(self):
         return f'Ticket for {self.showtime.movie.title} at {self.showtime.show_time} for seat {self.seat_number}'
-
-    def save(self, *args, **kwargs):
-        ticket_price = self.showtime.ticket_price
-        self.total_price = Decimal(ticket_price * self.num_of_tickets)
-        super().save(*args, **kwargs)
 
     class Meta:
         unique_together = ('showtime', 'seat_number')

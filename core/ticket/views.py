@@ -55,13 +55,12 @@ class TicketView(APIView):
         showtime = Showtime.objects.get(id=showtime_id)
         user = User.objects.get(id=request.user.id)
         seat_number = request.data.get('seat_number')
-        num_of_tickets = int(request.data.get('num_of_tickets'))
         if self.queryset.filter(showtime=showtime, seat_number=seat_number).exists():
             return Response({'error': 'this seat is already booked'}, status=status.HTTP_400_BAD_REQUEST)
 
-        ticket = self.queryset.create(user=user, showtime=showtime, seat_number=seat_number, num_of_tickets=num_of_tickets)
+        ticket = self.queryset.create(user=user, showtime=showtime, seat_number=seat_number)
         ticket.save()
-        return Response({'success': 'ticket created successfully', "total_price": ticket.total_price}, status=status.HTTP_201_CREATED)
+        return Response({'success': 'ticket created successfully'}, status=status.HTTP_201_CREATED)
 
 
 
@@ -72,10 +71,12 @@ class PaymentView(APIView):
     def post(self, request, ticket_id, *args, **kwargs):
         user = User.objects.get(id=request.user.id)
         ticket = Ticket.objects.get(id=ticket_id)
-        amount = ticket.total_price
+        amount = ticket.showtime.ticket_price
         payment_status = request.data.get('payment_status')
         if payment_status == 'True':
             payment_status = 'Success'
+            ticket.is_paid = True
+            ticket.save()
         elif payment_status == 'False':
             payment_status = 'Failed'
 

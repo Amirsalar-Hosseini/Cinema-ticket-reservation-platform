@@ -11,7 +11,7 @@ class ShowtimeSerializer(serializers.ModelSerializer):
 class TicketSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ticket
-        fields = ('seat_number', 'num_of_tickets')
+        fields = ('seat_number',)
 
 
 class PaymentSerializer(serializers.ModelSerializer):

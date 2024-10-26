@@ -22,7 +22,7 @@ class Review(models.Model):
     """
     define user comments
     """
-    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='reviews')
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='reviews'   )
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     rating = models.IntegerField(choices=[(i, str(i)) for i in range(1, 6)])
     comment = models.TextField()

@@ -9,7 +9,7 @@ class ShowtimeAdmin(admin.ModelAdmin):
 
 @admin.register(Ticket)
 class TicketAdmin(admin.ModelAdmin):
-    list_display = ['id', 'user', 'showtime', 'seat_number', 'num_of_tickets', 'is_paid', 'total_price']
+    list_display = ['id', 'user', 'showtime', 'seat_number', 'is_paid']
 
 
 @admin.register(Payment)
