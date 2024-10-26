@@ -2,16 +2,21 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import Movie, Review
 from .serializers import MovieSerializer, ReviewSerializer
+from rest_framework.pagination import PageNumberPagination
 
 
 class MovieView(APIView):
+    pagination_class = PageNumberPagination
     queryset = Movie.objects.all()
     serializer_class = MovieSerializer
 
     def get(self, request):
         movies = self.queryset.all()
-        ser_data = self.serializer_class(movies, many=True)
-        return Response(ser_data.data)
+        paginator = self.pagination_class()
+        paginator.page_size = 10
+        paginated_movies = paginator.paginate_queryset(movies, request)
+        ser_data = self.serializer_class(paginated_movies, many=True)
+        return paginator.get_paginated_response(ser_data.data)
 
 class MovieDetailView(APIView):
     queryset = Movie.objects.all()
