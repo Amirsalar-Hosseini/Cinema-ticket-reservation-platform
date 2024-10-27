@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     # Packages
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
+    'django_celery_beat',
     # Apps
     'home.apps.HomeConfig',
     'accounts.apps.AccountsConfig',
@@ -119,7 +120,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Tehran'
 
 USE_I18N = True
 
@@ -162,3 +163,15 @@ SIMPLE_JWT = {
     'BLACKLIST_AFTER_ROTATION': True,
     'AUTH_HEADER_TYPES': ('JWT',),
 }
+
+# Celery(Redis)
+from celery.schedules import crontab
+
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_BEAT_SCHEDULE = {
+    'delete_old_codes_every_midnight': {
+        'task': 'accounts.tasks.delete_old_codes',
+        'schedule': crontab(hour=0, minute=0),
+    },
+}
+
