@@ -11,6 +11,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['last_name'] = user.last_name
         token['phone_number'] = user.phone_number
         token['is_superuser'] = user.is_superuser
+        token['is_verify'] = user.is_verify
 
         return token
 

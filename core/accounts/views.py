@@ -54,6 +54,8 @@ class VerifyCodeView(APIView):
         if last_code.code == code:
             last_code.is_used = True
             last_code.save()
+            user.is_verify = True
+            user.save()
             return Response({'message': 'Phone number verified and registration complete.'}, status=status.HTTP_200_OK)
         else:
             return Response({'error': 'Invalid verification code.'}, status=status.HTTP_400_BAD_REQUEST)
