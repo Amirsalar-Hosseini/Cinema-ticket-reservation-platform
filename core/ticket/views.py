@@ -1,10 +1,11 @@
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .models import Showtime, Ticket, Payment
+from .models import Showtime, Ticket, Payment, Discount
 from .serializers import ShowtimeSerializer, TicketSerializer, PaymentSerializer
 from accounts.models import User
-
+from django.utils import timezone
+from django.db.models import F
 
 class ShowtimeView(APIView):
     queryset = Showtime.objects.all()
@@ -52,13 +53,32 @@ class TicketView(APIView):
         return Response(response_data, status=status.HTTP_200_OK)
 
     def post(self, request, showtime_id, *args, **kwargs):
+        discount_code = request.data.get('discount_code', None)
+
         showtime = Showtime.objects.get(id=showtime_id)
         user = User.objects.get(id=request.user.id)
+        if discount_code:
+            try:
+                discount = Discount.objects.get(discount_code=discount_code, users=user, showtime=showtime)
+            except Discount.DoesNotExist:
+                return Response({'error': 'Discount code does not exist'}, status=status.HTTP_404_NOT_FOUND)
+
+            active_discount = discount.is_active()
+
+            if active_discount:
+                final_price = showtime.ticket_price * (1 - discount.percent / 100)
+                discount.times_used += 1
+                discount.save()
+            else:
+                return Response({'error': 'invalid discount code'}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            final_price = showtime.ticket_price
+
         seat_number = request.data.get('seat_number')
         if self.queryset.filter(showtime=showtime, seat_number=seat_number).exists():
             return Response({'error': 'this seat is already booked'}, status=status.HTTP_400_BAD_REQUEST)
 
-        ticket = self.queryset.create(user=user, showtime=showtime, seat_number=seat_number)
+        ticket = self.queryset.create(user=user, showtime=showtime, seat_number=seat_number, final_price=final_price)
         ticket.save()
         return Response({'success': 'ticket created successfully'}, status=status.HTTP_201_CREATED)
 
@@ -71,7 +91,7 @@ class PaymentView(APIView):
     def post(self, request, ticket_id, *args, **kwargs):
         user = User.objects.get(id=request.user.id)
         ticket = Ticket.objects.get(id=ticket_id)
-        amount = ticket.showtime.ticket_price
+        amount = ticket.final_price
         payment_status = request.data.get('payment_status')
         if payment_status == 'True':
             payment_status = 'Success'

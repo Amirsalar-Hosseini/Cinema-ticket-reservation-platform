@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Showtime, Ticket, Payment
+from .models import Showtime, Ticket, Payment, Discount
 
 
 @admin.register(Showtime)
@@ -15,3 +15,8 @@ class TicketAdmin(admin.ModelAdmin):
 @admin.register(Payment)
 class PaymentAdmin(admin.ModelAdmin):
     list_display = ['id', 'user', 'ticket', 'amount', 'payment_status', 'payment_date']
+
+@admin.register(Discount)
+class DiscountAdmin(admin.ModelAdmin):
+    list_display = ('name', 'percent', 'start_time', 'end_time', 'max_usage', 'times_used', 'is_active')
+    filter_horizontal = ('users', 'showtime')

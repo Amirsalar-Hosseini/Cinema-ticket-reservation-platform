@@ -34,8 +34,9 @@ A **web-based cinema ticket booking system** built with Django REST Framework, a
 - **Backend:** Django, Django REST Framework
 - **Database:** PostgreSQL
 - **Authentication:** Custom JWT-based authentication
-- **Frontend:** (To be integrated with React, Vue, or Angular)
-- **Deployment:** Docker for containerization (optional)
+- **Frontend:** Need you :)
+- **Task Queue** Celery, Django Celery Beat
+- **Message Broker** Redis
 
 ---
 
