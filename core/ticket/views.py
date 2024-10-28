@@ -37,7 +37,7 @@ class ShowTimeDetailView(APIView):
 
 
 class TicketView(APIView):
-    permission_classes = (AllowAny,)
+    permission_classes = (IsAuthenticated,)
     queryset = Ticket.objects.all()
     serializer_class = TicketSerializer
 
@@ -53,7 +53,6 @@ class TicketView(APIView):
             'available_seat': available_seats,
         }
         return Response(response_data, status=status.HTTP_200_OK)
-        # create new view for post AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
     def post(self, request, showtime_id, *args, **kwargs):
         discount_code = request.data.get('discount_code', None)
 
