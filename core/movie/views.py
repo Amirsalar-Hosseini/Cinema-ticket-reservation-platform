@@ -3,9 +3,11 @@ from rest_framework.response import Response
 from .models import Movie, Review
 from .serializers import MovieSerializer, ReviewSerializer
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.permissions import AllowAny, IsAuthenticated
 
 
 class MovieView(APIView):
+    permission_classes = (AllowAny,)
     pagination_class = PageNumberPagination
     queryset = Movie.objects.all()
     serializer_class = MovieSerializer
@@ -19,6 +21,7 @@ class MovieView(APIView):
         return paginator.get_paginated_response(ser_data.data)
 
 class MovieDetailView(APIView):
+    permission_classes = (AllowAny,)
     queryset = Movie.objects.all()
     serializer_class = MovieSerializer
 
@@ -28,11 +31,4 @@ class MovieDetailView(APIView):
         return Response(ser_data.data)
 
 
-class ReviewView(APIView):
-    queryset = Review.objects.all()
-    serializer_class = ReviewSerializer
-
-    def get(self, request):
-        reviews = self.queryset.all()
-        ser_data = self.serializer_class(reviews, many=True)
-        return Response(ser_data.data)
+# review for movie detail view POST

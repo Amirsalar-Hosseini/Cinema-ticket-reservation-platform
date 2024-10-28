@@ -21,6 +21,7 @@ class UserRegisterView(APIView):
 
 
 class SendVerificationCodeView(APIView):
+    permission_classes = (permissions.AllowAny,)
 
     def post(self, request):
         user = User.objects.get(id=request.user.id)
@@ -38,6 +39,7 @@ class SendVerificationCodeView(APIView):
 
 
 class VerifyCodeView(APIView):
+    permission_classes = (permissions.AllowAny,)
 
     def post(self, request):
         user = User.objects.get(id=request.user.id)

@@ -4,8 +4,10 @@ from rest_framework.views import APIView
 from .models import Showtime, Ticket, Payment, Discount
 from .serializers import ShowtimeSerializer, TicketSerializer, PaymentSerializer
 from accounts.models import User
+from rest_framework.permissions import AllowAny, IsAuthenticated
 
 class ShowtimeView(APIView):
+    permission_classes = (AllowAny,)
     queryset = Showtime.objects.all()
     serializer_class = ShowtimeSerializer
 
@@ -24,6 +26,7 @@ class ShowtimeView(APIView):
 
 
 class ShowTimeDetailView(APIView):
+    permission_classes = (AllowAny,)
     queryset = Showtime.objects.all()
     serializer_class = ShowtimeSerializer
 
@@ -34,6 +37,7 @@ class ShowTimeDetailView(APIView):
 
 
 class TicketView(APIView):
+    permission_classes = (AllowAny,)
     queryset = Ticket.objects.all()
     serializer_class = TicketSerializer
 
@@ -49,7 +53,7 @@ class TicketView(APIView):
             'available_seat': available_seats,
         }
         return Response(response_data, status=status.HTTP_200_OK)
-
+        # create new view for post AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
     def post(self, request, showtime_id, *args, **kwargs):
         discount_code = request.data.get('discount_code', None)
 
@@ -83,6 +87,7 @@ class TicketView(APIView):
 
 
 class PaymentView(APIView):
+    permission_classes = (IsAuthenticated,)
     queryset = Payment.objects.all()
     serializer_class = PaymentSerializer
 
