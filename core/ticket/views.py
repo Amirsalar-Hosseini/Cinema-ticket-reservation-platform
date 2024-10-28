@@ -4,8 +4,6 @@ from rest_framework.views import APIView
 from .models import Showtime, Ticket, Payment, Discount
 from .serializers import ShowtimeSerializer, TicketSerializer, PaymentSerializer
 from accounts.models import User
-from django.utils import timezone
-from django.db.models import F
 
 class ShowtimeView(APIView):
     queryset = Showtime.objects.all()

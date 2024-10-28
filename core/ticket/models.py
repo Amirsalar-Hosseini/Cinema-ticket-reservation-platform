@@ -63,10 +63,7 @@ class Discount(models.Model):
     times_used = models.PositiveIntegerField(default=0)
 
     def is_active(self):
-        if self.start_time <= timezone.now() <= self.end_time and self.times_used < self.max_usage:
-            return True
-        else:
-            return False
+        return self.start_time <= timezone.now() <= self.end_time and self.times_used < self.max_usage
 
     def __str__(self):
         return f"{self.name} - {self.percent}%"
