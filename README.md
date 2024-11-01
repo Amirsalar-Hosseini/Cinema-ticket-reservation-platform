@@ -84,7 +84,7 @@ Follow these steps to set up the project locally:
 
     This project uses a custom user model for managing authentication and user roles. Key features include:
 
-   . Unique email as the primary user identifier.
+   . Unique phone number as the primary user identifier.
    . Secure JWT-based session management.
    . is_staff and is_superuser fields for admin control.
 
